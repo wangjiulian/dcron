@@ -91,15 +91,16 @@ func (np *NodePool) tickerUpdatePool() {
 func (np *NodePool) PickNodeByJobName(jobName string) string {
 	timeNow := time.Now()
 	tag := fmt.Sprintf("%d-%s", timeNow.Unix(), jobName)
-	fmt.Printf("PickNodeByJobName %s start %s tag cost %s", jobName, tag, time.Now().Sub(timeNow).String())
+	fmt.Printf("PickNodeByJobName Start %s cost:%s ", tag, time.Now().Sub(timeNow).String())
 	np.mu.Lock()
-	fmt.Printf("PickNodeByJobName %s get lock %s tag cost %s", jobName, tag, time.Now().Sub(timeNow).String())
+	fmt.Printf("PickNodeByJobName Get Lock %s cost:%s ", tag, time.Now().Sub(timeNow).String())
 	defer np.mu.Unlock()
 	if np.nodes.IsEmpty() {
 		return ""
 	}
-	fmt.Printf("PickNodeByJobName %s strat nodes get %s tag cost %s", jobName, tag, time.Now().Sub(timeNow).String())
+
+	fmt.Printf("PickNodeByJobName Get Nodes %s cost:%s ", tag, time.Now().Sub(timeNow).String())
 	str := np.nodes.Get(jobName)
-	fmt.Printf("PickNodeByJobName %s end nodes get %s tag cost %s", jobName, tag, time.Now().Sub(timeNow).String())
+	fmt.Printf("PickNodeByJobName End Get Nodes %s cost:%s ", tag, time.Now().Sub(timeNow).String())
 	return str
 }

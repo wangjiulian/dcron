@@ -122,16 +122,16 @@ func (d *Dcron) Remove(jobName string) {
 func (d *Dcron) allowThisNodeRun(jobName string) bool {
 	timeNow := time.Now()
 	tag := fmt.Sprintf("%d-%s", timeNow.Unix(), jobName)
-	d.info("PickNodeByJobName %s start %s tag cost %s", jobName, tag, time.Now().Sub(timeNow).String())
+	d.info("allowThisNodeRun Start %s cost: ", tag, time.Now().Sub(timeNow).String())
 	allowRunNode := d.nodePool.PickNodeByJobName(jobName)
-	d.info("PickNodeByJobName %s end %s tag cost %s", jobName, tag, time.Now().Sub(timeNow).String())
+	d.info("allowThisNodeRun End %s cost: ", tag, time.Now().Sub(timeNow).String())
 	d.info("job '%s' running in node %s", jobName, allowRunNode)
 	if allowRunNode == "" {
 		d.err("node pool is empty")
 		return false
 	}
 	f := d.nodePool.NodeID == allowRunNode
-	d.info("Result %v PickNodeByJobName %s end %s tag cost %s", f, jobName, tag, time.Now().Sub(timeNow).String())
+	d.info("allowThisNodeRun Result %v %s cost: ", f, tag, time.Now().Sub(timeNow).String())
 	return f
 }
 
