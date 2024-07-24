@@ -1,13 +1,14 @@
 package dcron
 
 import (
+	"fmt"
 	"github.com/libi/dcron/consistenthash"
 	"github.com/libi/dcron/driver"
 	"sync"
 	"time"
 )
 
-//NodePool is a node pool
+// NodePool is a node pool
 type NodePool struct {
 	serviceName string
 	NodeID      string
@@ -86,12 +87,19 @@ func (np *NodePool) tickerUpdatePool() {
 	}
 }
 
-//PickNodeByJobName : 使用一致性hash算法根据任务名获取一个执行节点
+// PickNodeByJobName : 使用一致性hash算法根据任务名获取一个执行节点
 func (np *NodePool) PickNodeByJobName(jobName string) string {
+	timeNow := time.Now()
+	tag := fmt.Sprintf("%d-%s", timeNow.Unix(), jobName)
+	fmt.Printf("PickNodeByJobName %s start %s tag cost %s", jobName, tag, time.Now().Sub(timeNow).String())
 	np.mu.Lock()
+	fmt.Printf("PickNodeByJobName %s get lock %s tag cost %s", jobName, tag, time.Now().Sub(timeNow).String())
 	defer np.mu.Unlock()
 	if np.nodes.IsEmpty() {
 		return ""
 	}
-	return np.nodes.Get(jobName)
+	fmt.Printf("PickNodeByJobName %s strat nodes get %s tag cost %s", jobName, tag, time.Now().Sub(timeNow).String())
+	str := np.nodes.Get(jobName)
+	fmt.Printf("PickNodeByJobName %s end nodes get %s tag cost %s", jobName, tag, time.Now().Sub(timeNow).String())
+	return str
 }
